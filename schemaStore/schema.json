@@ -122,7 +122,7 @@
             }, 
 
             {
-                "endpoint": "/api/knowledge_graph/ppi_kg",
+                "endpoint": "/ppi_kg",
                 "label": "Protein KG",
                 "type": "page",
                 "component": "PPi",
