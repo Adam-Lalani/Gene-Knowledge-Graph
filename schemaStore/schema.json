@@ -125,7 +125,7 @@
                 "endpoint": "/ppi_kg",
                 "label": "Protein KG",
                 "type": "page",
-                "component": "PPi",
+                "component": "PPI",
                 "props": {
                     "init_function": "interactive"
                 }
