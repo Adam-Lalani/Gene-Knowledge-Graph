@@ -1,0 +1,34 @@
+version: '1'
+services:
+  kg:
+    build: .
+    image: adamll/knowledge_graph:1.2.0
+    platform: linux/x86_64
+    env_file: .env.deploy
+    ports:
+      - 3002:3000
+  ingest:
+    build: scripts/ingestion
+    image: maayanlab/kg-ingest:0.1.5
+    platform: linux/x86_64
+    env_file: .env
+  neo4j:
+    image: maayanlab/neo4j:mac-arm
+    user: "${UID}:${GID}"
+    environment:
+      NEO4JLABS_PLUGINS: '["apoc", "graph-data-science", "n10s"]'
+      NEO4J_AUTH: ${NEO4J_USER}/${NEO4J_PASSWORD}
+      NEO4J_dbms_memory_heap_max__size: ${NEO4J_dbms_memory_heap_max__size}
+      NEO4J_dbms_memory_heap_initial__size: ${NEO4J_dbms_memory_heap_initial__size}
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - ./data-reprotox-v2/neo4j:/data
+    networks:
+      internal:
+        aliases:
+          - neo4j
+# Internal docker networks
+networks:
+  internal:

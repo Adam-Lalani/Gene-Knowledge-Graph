@@ -1,0 +1,161 @@
+{
+    "nodes": [
+        {
+            "node": "Protein",
+            "example": [
+                "ADA",
+                "GLOD4"
+            ],
+            "display": [
+                {
+                    "label": "Protein ID",
+                    "text": "${id}",
+                    "type": "text"
+                },
+                {
+                    "label": "label",
+                    "text": "${label}",
+                    "type": "text"
+                }
+            ],
+            "relation": [],
+            "search": [
+                "id",
+                "label"
+            ]
+        }
+    ],
+    "edges": [
+        {
+            "match": [
+                "PPI"
+            ],
+            "selected": true,
+            "display": [
+                {
+                    "label": "source",
+                    "text": "${source}",
+                    "type": "text"
+                },
+                {
+                    "label": "relation",
+                    "text": "${relation}",
+                    "type": "text"
+                },
+                {
+                    "label": "target",
+                    "text": "${target}",
+                    "type": "text"
+                },
+                {
+                    "label": "source label",
+                    "text": "${source_label}",
+                    "type": "text"
+                },
+                {
+                    "label": "target label",
+                    "text": "${target_label}",
+                    "type": "text"
+                },
+                {
+                    "label": "Interaction Confidence",
+                    "text": "${Interaction Confidence}",
+                    "type": "text"
+                },
+                {
+                    "label": "Experimental System",
+                    "text": "${Experimental System}",
+                    "type": "text"
+                },
+                {
+                    "label": "Source Database",
+                    "text": "${Source Database}",
+                    "type": "text"
+                },
+                {
+                    "label": "pmids",
+                    "text": "${pmids}",
+                    "type": "text"
+                },
+                {
+                    "label": "evidence type",
+                    "text": "${evidence_type}",
+                    "type": "text"
+                },
+                {
+                    "label": "combined score",
+                    "text": "${combined_score}",
+                    "type": "text"
+                },
+                {
+                    "label": "normalized score",
+                    "text": "${normalized_score}",
+                    "type": "text"
+                },
+                {
+                    "label": "valid",
+                    "text": "${valid}",
+                    "type": "text"
+                }
+            ]
+        }
+    ],
+    "header": {
+        "title": "G2N test",
+        "icon": {
+            "src": "https://minio.dev.maayanlab.cloud/enrichr-kg/enrichr-kg.png",
+            "favicon": "https://minio.dev.maayanlab.cloud/enrichr-kg/enrichr-kg.png",
+            "alt": "Enrichr logo",
+            "key": "enrichr_logo",
+            "width": 100,
+            "height": 60
+        },
+        "tabs": [
+            {
+                "endpoint": "/",
+                "label": "Term & Gene Search",
+                "type": "page",
+                "component": "KnowledgeGraph",
+                "props": {
+                    "init_function": "initialize_kg"
+                }
+            }, 
+
+            {
+                "endpoint": "/api/knowledge_graph/ppi_kg",
+                "label": "Protein KG",
+                "type": "page",
+                "component": "KnowledgeGraph",
+                "props": {
+                    "init_function": "interactive"
+                }
+
+            }
+        ]
+    },
+    "footer": [
+        {
+            "type": "github",
+            "code": "https://github.com/MaayanLab/enrichr-kg",
+            "issues": "https://github.com/MaayanLab/enrichr-kg/issues"
+        },
+        {
+            "type": "icon",
+            "key": "lab_icon",
+            "src": "https://minio.dev.maayanlab.cloud/enrichr-kg/maayan-lab.jpg",
+            "alt": "MaayanLab",
+            "href": "https://labs.icahn.mssm.edu/maayanlab/",
+            "height": 125,
+            "width": 150
+        },
+        {
+            "type": "icon",
+            "key": "center_icon",
+            "src": "https://minio.dev.maayanlab.cloud/enrichr-kg/ISMMS_Center_Bioinformatics_RGB_Vrtl.jpg",
+            "alt": "COB",
+            "href": "https://icahn.mssm.edu/research/bioinformatics",
+            "height": 125,
+            "width": 200
+        }
+    ]
+}
