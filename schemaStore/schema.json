@@ -125,7 +125,7 @@
                 "endpoint": "/api/knowledge_graph/ppi_kg",
                 "label": "Protein KG",
                 "type": "page",
-                "component": "KnowledgeGraph",
+                "component": "PPi",
                 "props": {
                     "init_function": "interactive"
                 }
