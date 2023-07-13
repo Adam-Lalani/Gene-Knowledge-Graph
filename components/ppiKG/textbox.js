@@ -18,7 +18,7 @@ const TextBox = () => {
             const payload = {'genset' : processed}
             //setResponse(payload); // Update the processed text state
 
-            const url =  "http://localhost:3000/G2Ntest/api/knowledge_graph/ppi_kg"
+            const url = `${process.env.NEXT_PUBLIC_HOST}G2Ntest/api/knowledge_graph/ppi_kg`
             const response = await fetch(url, {
                 method: 'POST', // Change to the appropriate HTTP method (GET, POST, etc.)
                 headers: {
@@ -27,7 +27,7 @@ const TextBox = () => {
                 body: payload //JSON.stringify({ text }), // Send the text input as the request body
               });
               const data = await response.json();
-              setResponse("cat"); // Store the HTTP response in the state
+              setResponse(data); // Store the HTTP response in the state
         } catch (error) {
           console.error(error);
       }
