@@ -81,9 +81,6 @@ export const fetch_kg_schema = async () => {
 	return schema
   }
 
-export const initialize_ppi = async () => {
-	return 
-}
 
 export const initialize_kg = async () => {
 	const entries = {}
