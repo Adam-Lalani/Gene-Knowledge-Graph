@@ -127,7 +127,7 @@
                 "type": "page",
                 "component": "PPI",
                 "props": {
-                    "init_function": "interactive"
+                    "init_function": "initialize_ppi"
                 }
 
             }
