@@ -15,7 +15,7 @@ const TextBox = () => {
         
         try{
             const processed = text.toUpperCase().split(" ")
-            const payload = {'genset' : processed}
+            const payload = {'geneset' : processed}
             //setResponse(payload); // Update the processed text state
 
             const url = `${process.env.NEXT_PUBLIC_HOST}G2Ntest/api/knowledge_graph/ppi_kg`
@@ -27,6 +27,7 @@ const TextBox = () => {
                 body: payload //JSON.stringify({ text }), // Send the text input as the request body
               });
               const data = await response.json();
+              console.log(data)
               setResponse(data); // Store the HTTP response in the state
         } catch (error) {
           console.error(error);

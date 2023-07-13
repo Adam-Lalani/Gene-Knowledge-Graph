@@ -6,7 +6,8 @@ const TextPage = () => {
     <div>
       <h1>Welcome to the Text Page</h1>
       <TextBox />
-      <p>This is a simple text page in React.</p>
+
+      <p>This is a simple text page in React. why</p>
     </div>
   );
 };
