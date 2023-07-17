@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-
+import getQ from './query'
 
 const TextBox = () => {
     const [text, setText] = useState(''); // State to store the text input value
@@ -13,27 +13,30 @@ const TextBox = () => {
 
     const processText = async () => {
       // Process the text here, e.g., perform some operations or validations
-      
-      try{
-          const processed = text.toUpperCase().split(" ")
-          //setResponse(payload); // Update the processed text state
+      const processed = text.toUpperCase().split(" ")
+      const data = getQ({processed:processed});
+      setResponse(data);
 
-          const url = `${process.env.NEXT_PUBLIC_HOST}/G2Ntest/api/knowledge_graph/ppi_kg`
-          const response = await fetch(url, {
-              method: 'POST', // Change to the appropriate HTTP method (GET, POST, etc.)
-              headers: {
-                  'Content-Type': 'application/json', // Set the appropriate content type
-              },
-              body: JSON.stringify({ 
-                geneset: processed 
-              })
-            });
-            const data = await response.json();
-            console.log(data)
-            setResponse(data); // Store the HTTP response in the state
-      } catch (error) {
-        console.error(error);
-    }
+    //   try{
+    //       const processed = text.toUpperCase().split(" ")
+    //       //setResponse(payload); // Update the processed text state
+
+    //       const url = `${process.env.NEXT_PUBLIC_HOST}/G2Ntest/api/knowledge_graph/ppi_kg`
+    //       const response = await fetch(url, {
+    //           method: 'POST', // Change to the appropriate HTTP method (GET, POST, etc.)
+    //           headers: {
+    //               'Content-Type': 'application/json', // Set the appropriate content type
+    //           },
+    //           body: JSON.stringify({ 
+    //             geneset: processed 
+    //           })
+    //         });
+    //         const data = await response.json();
+    //         console.log(data)
+    //         setResponse(data); // Store the HTTP response in the state
+    //   } catch (error) {
+    //     console.error(error);
+    // }
   };
 
   
