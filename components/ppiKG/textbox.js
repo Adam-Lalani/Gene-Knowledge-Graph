@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
+
 const TextBox = () => {
     const [text, setText] = useState(''); // State to store the text input value
     const [response, setResponse] = useState(''); // State to store the processed text
@@ -11,31 +12,33 @@ const TextBox = () => {
     };
 
     const processText = async () => {
-        // Process the text here, e.g., perform some operations or validations
-        
-        try{
-            const processed = text.toUpperCase().split(" ")
-            const payload = {'geneset' : processed}
-            //setResponse(payload); // Update the processed text state
+      // Process the text here, e.g., perform some operations or validations
+      
+      try{
+          const processed = text.toUpperCase().split(" ")
+          //setResponse(payload); // Update the processed text state
 
-            const url = `${process.env.NEXT_PUBLIC_HOST}G2Ntest/api/knowledge_graph/ppi_kg`
-            const response = await fetch(url, {
-                method: 'POST', // Change to the appropriate HTTP method (GET, POST, etc.)
-                headers: {
-                    'Content-Type': 'application/json', // Set the appropriate content type
-                },
-                body: payload //JSON.stringify({ text }), // Send the text input as the request body
-              });
-              const data = await response.json();
-              console.log(data)
-              setResponse(data); // Store the HTTP response in the state
-        } catch (error) {
-          console.error(error);
-      }
-    };
+          const url = `${process.env.NEXT_PUBLIC_HOST}/G2Ntest/api/knowledge_graph/ppi_kg`
+          const response = await fetch(url, {
+              method: 'POST', // Change to the appropriate HTTP method (GET, POST, etc.)
+              headers: {
+                  'Content-Type': 'application/json', // Set the appropriate content type
+              },
+              body: JSON.stringify({ 
+                geneset: processed 
+              })
+            });
+            const data = await response.json();
+            console.log(data)
+            setResponse(data); // Store the HTTP response in the state
+      } catch (error) {
+        console.error(error);
+    }
+  };
+
   
     return (
-       <div>
+    <div>
       <TextField
         label="Enter Text"
         value={text}
@@ -44,13 +47,10 @@ const TextBox = () => {
       />
       <Button variant="contained" onClick={processText}>
         Process
-      </Button>
-      {response && (
-        <div>
-          <p>HTTP Response:</p>
+      </Button>    
+        <div>  
           <pre>{JSON.stringify(response)}</pre>
         </div>
-      )}
     </div>
   );
 };
