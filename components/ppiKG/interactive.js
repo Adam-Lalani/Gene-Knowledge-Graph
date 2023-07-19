@@ -1,13 +1,21 @@
 import React from "react";
 import TextBox from './textbox';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
 const TextPage = () => {
   return (
     <div>
-      <h1>Welcome to the Text Page</h1>
-      <TextBox />
-
-      <p>This is a simple text page in React. why</p>
+      <h1></h1>
+      <Box sx={{ width: '100%'}}> 
+      <Grid Container>
+        <Grid item >
+      <TextBox 
+      />
+      </Grid>
+      </Grid>
+     </Box>
+      <p></p>
     </div>
   );
 };

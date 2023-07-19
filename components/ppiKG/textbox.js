@@ -83,13 +83,14 @@ export default function TextBox(){
   };
 
   const processText = async () => {
-    const processed = text.toUpperCase().split(" ")
+    const processed = text.toUpperCase().split(/[\s,]+/)
+    console.log(processed)
     const data = await getQ({processed:processed, subG: size, hops: path});
-    console.log(data)
-    // setGenes(data);
-    // console.log(data)
-    // setLayout(Object.keys(layouts)[0])
-    // setId(id+1)
+  
+    setGenes(data);
+    
+    setLayout(Object.keys(layouts)[0])
+    setId(id+1)
 };
 
 
@@ -112,14 +113,17 @@ export default function TextBox(){
 
   return (
   <div>
-    <Stack spacing={2}>
-    <Stack
-     direction="row" 
-     spacing={2}
+    <Box sx={{ width: '100%'}}> 
+    <Grid columnSpacing={3} direction="column">
+    
+    <Grid  
+     item 
     > 
-    <Stack
-      spacing = {2}
-    >
+
+    <Grid container spacing={2} columnSpacing={2}> 
+
+    <Grid item> 
+    <Stack spacing = {2}>
     <TextField
       label="Enter Gene List"
       id="outlined-basic"
@@ -134,14 +138,14 @@ export default function TextBox(){
       Process
     </Button> 
     </Stack>
+    </Grid>
 
-    <Stack
-      spacing = {2}
-    >
+    <Grid item> 
+    <Stack spacing = {2}>
     <p>Nodes between Proteins</p>
     <Slider    
       value = {path}
-      onChange={processPath}
+      onChange={processPath} 
 
       defaultValue={2}
       valueLabelDisplay="auto"
@@ -187,17 +191,29 @@ export default function TextBox(){
         <MenuItem onClick={() => handleClose(Object.keys(layouts)[1])}>Hierarchical</MenuItem>
         <MenuItem onClick={() => handleClose(Object.keys(layouts)[2])}>Geometric</MenuItem>
       </Menu>
+      </Stack> 
 
-      </Stack>  
-      </Stack>   
+      </Grid>
 
-    <Box
+      </Grid>
+
+      </Grid>   
+
+
+
+
+
+
+
+
+
+    <Grid item 
       style={{
-      border: "1px solid",
+      border: "none",
       backgroundColor: "#f5f6fe"
       }}>
         {(typeof genes === 'string') ? (
-          <Box>No results</Box>
+          <Box></Box>
         ) :
           <Cytoscape
             key={id}
@@ -376,8 +392,10 @@ export default function TextBox(){
             }}
           />
           }
+      </Grid>
+      </Grid>
       </Box>
-      </Stack></div>
+      </div>
 );
 };
 
