@@ -101,7 +101,7 @@
         }
     ],
     "header": {
-        "title": "<span style='color:#3f51b5; font-weight: bold'> G2N </span>",
+        "title": "<span style='color:#ade7ff; font-weight: bold'> G2N </span>",
         "background":{"backgroundColor":"#222222","contrastText":"#FFF"},
         "icon": {
             "src": "https://minio.dev.maayanlab.cloud/g2n/ADD8E6.png",
