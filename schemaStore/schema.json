@@ -130,8 +130,16 @@
                 "props": {
                     "init_function": "initialize_kg"
                 }
-
-            }
+            },
+            {
+                "endpoint":"/downloads",
+                "label":"Download Assets",
+                "type":"markdown",
+                "component":"Markdown",
+                "props":{
+                "src":"https://s3.amazonaws.com/maayan-kg/enrichr-kg/assets/download.md"
+                }
+        }
             
         ]
     },
