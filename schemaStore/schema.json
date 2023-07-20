@@ -137,7 +137,7 @@
                 "type":"markdown",
                 "component":"Markdown",
                 "props":{
-                "src":"https://s3.amazonaws.com/maayan-kg/enrichr-kg/assets/download.md"
+                "src":"https://raw.githubusercontent.com/Adam-Lalani/Gene-Knowledge-Graph/main/downloadsPage/download.md"
                 }
         }
             
