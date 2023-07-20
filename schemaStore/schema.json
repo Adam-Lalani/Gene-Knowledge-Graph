@@ -103,8 +103,8 @@
     "header": {
         "title": "<span style='color:#3f51b5; font-weight: bold'> G2N </span>",
         "icon": {
-            "src": "https://github.com/Adam-Lalani/Gene-Knowledge-Graph/blob/main/logo/ADD8E6.png",
-            "favicon": "https://github.com/Adam-Lalani/Gene-Knowledge-Graph/blob/main/logo/ADD8E6.png",
+            "src": "https://raw.githubusercontent.com/Adam-Lalani/Gene-Knowledge-Graph/main/logo/ADD8E6.png",
+            "favicon": "https://raw.githubusercontent.com/Adam-Lalani/Gene-Knowledge-Graph/main/logo/ADD8E6.png",
             "alt": "g2n logo",
             "key": "g2n_logo",
             "width": 100,
