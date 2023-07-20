@@ -103,8 +103,8 @@
     "header": {
         "title": "<span style='color:#3f51b5; font-weight: bold'> G2N </span>",
         "icon": {
-            "src": "https://minio.dev.maayanlab.cloud/enrichr-kg/enrichr-kg.png",
-            "favicon": "https://minio.dev.maayanlab.cloud/enrichr-kg/enrichr-kg.png",
+            "src": "https://drive.google.com/file/d/1tjDIVuVtSB_fBZS8WkE3ZReI712x_zik/view", 
+            "favicon": "https://drive.google.com/file/d/1tjDIVuVtSB_fBZS8WkE3ZReI712x_zik/view", 
             "alt": "Enrichr logo",
             "key": "enrichr_logo",
             "width": 100,
@@ -131,6 +131,7 @@
                 }
 
             }
+            
         ]
     },
     "footer": [
