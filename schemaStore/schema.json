@@ -103,10 +103,10 @@
     "header": {
         "title": "<span style='color:#3f51b5; font-weight: bold'> G2N </span>",
         "icon": {
-            "src": "https://minio.dev.maayanlab.cloud/enrichr-kg/enrichr-kg.png",
-            "favicon": "https://minio.dev.maayanlab.cloud/enrichr-kg/enrichr-kg.png",
-            "alt": "Enrichr logo",
-            "key": "enrichr_logo",
+            "src": "https://raw.githubusercontent.com/Adam-Lalani/Gene-Knowledge-Graph/main/logo/ADD8E6.png",
+            "favicon": "https://raw.githubusercontent.com/Adam-Lalani/Gene-Knowledge-Graph/main/logo/ADD8E6.png",
+            "alt": "g2n logo",
+            "key": "g2n_logo",
             "width": 100,
             "height": 60
         },
