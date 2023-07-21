@@ -2,11 +2,16 @@ import fetch from "node-fetch";
 import neo4j from "neo4j-driver"
 import { neo4jDriver } from "../../../../utils/neo4j"
 
-export const node_colour = ({label, input_list}) => {
-    if (input_list.includes(label)){
-        return "#3b609c"
+export const node_colour = ({label, id, input_list}) => {
+    if (input_list.includes(label) || input_list.includes(id)){
+        return "#aff0ca"
+         //"#3f51b5"
     } 
-    return "#ADD8E6"
+    // #ADD8E6"
+    return '#ade7ff'
+    // "#a7d5f2"
+    //"#3b609c"
+    
 }
 
 
@@ -35,8 +40,12 @@ export const resolve_results = ({results, input_list}) => {
 							kind: start_kind,
 							label: start_node.properties.label || start_node.properties.id,
                             // add coloring scheme 
-
-							color: node_colour({label: start_node.properties.label, input_list: input_list})
+							color: node_colour({label: start_node.properties.label,id: start_node.properties.id, input_list: input_list}),
+                            properties: {
+                                id: start_node.properties.id,
+							    kind: start_kind,
+							    label: start_node.properties.label || start_node.properties.id,
+                            }
 						} 
 					})
 					path.push({ 
@@ -46,8 +55,14 @@ export const resolve_results = ({results, input_list}) => {
 							kind: "Relation",
 							relation: relation_type,
 							label: relation_type,
-                            Source_Database: relation.properties['source_database'] || "",
+                            source_database: relation.properties['source_database'] || "",
 							properties: {
+                                source: start_node.properties.id,
+							    target: end_node.properties.id,
+							    kind: "Relation",
+							    relation: relation_type,
+							    label: relation_type,
+                                source_database: relation.properties['source_database'] || "",
                                 Experimental_System: relation.properties['experimental_system'] || "",
                                 Evidence_Type: relation.properties['evidence_type'] || "",
                                 Throughput: relation.properties['Throughput'] || "",
@@ -66,7 +81,12 @@ export const resolve_results = ({results, input_list}) => {
 							id: end_node.properties.id,
 							kind: end_kind,
 							label: end_node.properties.label || end_node.properties.id,
-							color: node_colour({label: end_node.properties.label, input_list: input_list})
+							color: node_colour({label: end_node.properties.label, id: end_node.properties.id, input_list: input_list}),
+                            properties: {
+                                id: start_node.properties.id,
+							    kind: start_kind,
+							    label: start_node.properties.label || start_node.properties.id,
+                            }
 						} 
 					})
 				}
@@ -84,7 +104,9 @@ export const resolve_results = ({results, input_list}) => {
 const subgraph = async ({session, geneset, path_length, subgraph_size, databases}) => {
 
     try {
-        let q  = `MATCH p=(a:Protein WHERE a.label IN ${JSON.stringify(geneset)})-[r:PPI *0..${path_length}]-(b:Protein WHERE b.label IN ${JSON.stringify(geneset)})
+        let q  = `MATCH p=(a:Protein WHERE a.label IN ${JSON.stringify(geneset)} or a.id in ${JSON.stringify(geneset)})
+        -[r:PPI *0..${path_length}]
+        -(b:Protein WHERE b.label IN ${JSON.stringify(geneset)} or b.id in ${JSON.stringify(geneset)})
         WHERE ALL(rel in r where rel.source_database =~ ${JSON.stringify(databases)})
         RETURN p, nodes(p) as n, r
         LIMIT ${subgraph_size}`
@@ -145,10 +167,39 @@ export default async function query(req, res) {
                     }
                 }
 
+                // //format througput
+                // if (ret.ht === undefined){
+                //     ret.ht = 'true' 
+                // }
+                
+                // if (ret.lt === undefined){
+                //     ret.lt = 'true' 
+                // }
+                
+            
+                // if (ret.ht !== 'true' || ret.ht !== 'false'){
+                //         res.status(400).send("invalid input for ht- make sure it is in form 'ht' :' true' or 'ht' : 'false' ")
+                // } 
+
+                //  if (ret.lt  !== 'true' || ret.lt  !== 'true'){
+                //      res.status(400).send("invalid input for lt- make sure it is in form 'lt' : 'true' or 'lt' : 'false'")
+                // }
+
+
+
+                if (typeof ret.ci !== 'number' || typeof ret.ci !== undefined){
+                    res.status(400).send("invalid input for ci -  make sure it is a number between 0-1")
+                } else if (ret.ci < 0 || ret.ci === undefined){
+                        ret.ci = 0
+                } else if (ret.ci > 0){
+                    ret.ci = .95
+                }
+
+
 
                 //format databases 
                 if (ret.databases === undefined){
-                    ret.databases = ['iid*.|bioGRID|STRING|bioPlex 3.0']
+                    ret.databases = ['.*iid.*|.*bioGRID.*|.*STRING.*|.*bioPlex 3.0.*']
                 }
 
                 // check if its an array
@@ -163,7 +214,7 @@ export default async function query(req, res) {
                     if (typeof ret.databases[y] !== 'string'){
                         res.status(400).send("invalid input format")
                     } else{
-                        temp = temp + '.*' + ret.databases[y] + '*.|'
+                        temp = temp + '.*' + ret.databases[y] + '.*|'
                     }
                 }
                 ret.databases = [temp]
@@ -188,11 +239,15 @@ export default async function query(req, res) {
                 const path_length = ret.path_length
                 const subgraph_size  = ret.subgraph_size
                 const databases = ret.databases[0]
+                const ht = ret.ht
+                const lt = ret.lt
+                const ci = ret.ci
 
                 const results =  await subgraph({session, geneset, path_length, subgraph_size, databases})
 
-                res.status(200).send(JSON.stringify(results))
+                //res.status(200).send(JSON.stringify(results))
                 
+                res.status(200).send(JSON.stringify(ci))
         
 
                 session.close();
@@ -206,5 +261,5 @@ export default async function query(req, res) {
     } catch (error) {
         res.status(500).send(error)
     }
-
+    
 }
