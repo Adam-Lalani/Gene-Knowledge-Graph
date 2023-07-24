@@ -2,7 +2,7 @@ version: '1'
 services:
   kg:
     build: .
-    image: adamll/knowledge_graph:1.2.0
+    image: adamll/knowledge_graph:1.2.4
     platform: linux/x86_64
     env_file: .env.deploy
     ports:

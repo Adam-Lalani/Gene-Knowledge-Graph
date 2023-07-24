@@ -14,7 +14,7 @@ const get_color = ({color, darken}) => {
 	else return color_map[color].hex()
 }
 
-const highlight_color = '#ff8a80'
+const highlight_color = '#aff0ca'
 
 export const default_get_node_color_and_type = ({node, terms, color=default_color, aggr_scores, field, aggr_field, aggr_type, fields}) => {
 	// if(terms.indexOf(node.properties.label) > -1){
@@ -45,7 +45,7 @@ export const default_get_node_color_and_type = ({node, terms, color=default_colo
 		}
 	}
 	return {
-		color: get_color({color}),
+		color:'#ade7ff', //get_color({color}),
 		node_type: 0
 	}		
 }

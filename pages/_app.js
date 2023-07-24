@@ -96,7 +96,7 @@ function MyApp({ Component, pageProps, consentCookie, setConsentCookie, resetCoo
             />
           </Container>
           :
-          <div style={{backgroundColor: ((schema || {}).ui || {}).background || "#C5F8F8"}}  id={"main"}>
+          <div style={{backgroundColor: ((schema || {}).ui || {}).background || "#f5f6fa"}}  id={"main"}>
             <Container maxWidth={"lg"} style={{background: "#fff", padding: 0, flexGrow: 1, display: "flex", flexDirection: "column"}}>
               <Header {...pageProps}/>
               <div className='container'>

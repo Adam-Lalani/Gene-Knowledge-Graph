@@ -1,4 +1,6 @@
-#!/bin/sh
+
+echo $NEO4J_URL
+echo $(python -c "import os, socket, urllib.parse; u = urllib.parse.urlparse(os.environ['NEO4J_URL']); print(u._replace(netloc=u.netloc.replace(u.hostname, socket.gethostbyname(u.hostname))).geturl())")
 
 if [ $INGEST ]
 then

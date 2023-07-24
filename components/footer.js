@@ -113,7 +113,7 @@ const Footer = ({schema, consentCookie, setConsentCookie, resetCookie}) => {
     return (
         <Paper square style={{boxShadow: "none",
 			minHeight: 180,
-			background: (schema.ui || {}).footer_background || "#000",
+			background: (schema.ui || {}).footer_background || "#222222",
 			flexShrink: 0,
 			paddingTop: 30,
 			paddingBottom: 30,

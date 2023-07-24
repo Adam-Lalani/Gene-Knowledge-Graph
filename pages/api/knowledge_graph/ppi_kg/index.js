@@ -101,37 +101,83 @@ export const resolve_results = ({results, input_list}) => {
 
 
 
-const subgraph = async ({session, geneset, path_length, subgraph_size, databases}) => {
+const subgraph = async ({session, geneset, path_length, subgraph_size, biogrid, bioplex, iid, string, ci, ht, pred, ortho}) => {
 
     try {
         let q  = `MATCH p=(a:Protein WHERE a.label IN ${JSON.stringify(geneset)} or a.id in ${JSON.stringify(geneset)})
         -[r:PPI *0..${path_length}]
-        -(b:Protein WHERE b.label IN ${JSON.stringify(geneset)} or b.id in ${JSON.stringify(geneset)})
-        WHERE ALL(rel in r where rel.source_database =~ ${JSON.stringify(databases)})
-        RETURN p, nodes(p) as n, r
-        LIMIT ${subgraph_size}`
+        -(b:Protein WHERE b.label IN ${JSON.stringify(geneset)} or b.id in ${JSON.stringify(geneset)})`
         
-        // `MATCH p=(a:Protein)-[r:PPI *0..${path_length}]-(b:Protein)
-        // WHERE a.label IN ${JSON.stringify(geneset)} AND b.label IN ${JSON.stringify(geneset)}
-        // RETURN p, nodes(p) as n, r
-        // LIMIT ${subgraph_size}`
+        let startfilt = ` WHERE ALL(rel in r where `
+        let filt = []
         
+        let rtrn = ` RETURN p, nodes(p) as n, r LIMIT ${subgraph_size}`
+
+
+        let db = `(?i)`
+        if (biogrid){
+            db = db + `.*bioGRID.*|`
+        }
+
+        if (bioplex){
+            db = db + `.*bioPlex*|`
+        }
+
+        if (iid){
+            db = db+'.*iid.*|'
+        }
+
+        if (string){
+            db = db+'.*STRING.*|'
+        }
 
         
-        // `MATCH (n:Protein) where n.label IN ${JSON.stringify(geneset)} \
-        //  WITH collect(n) as \
-        //  nodes UNWIND nodes as n \
-        //  UNWIND nodes as m \
-        //  WITH * WHERE id(n) < id(m) \
-        //  MATCH path = allShortestPaths( (n)-[*..${path_length}]-(m) ) \
-        //  RETURN path`
+        if (db.length < 40){
+            filt.push(`(rel.source_database =~` + ` "`+db+`"`+`)`)
+         }
 
-        const subg = await session.run(q)
 
-        
+        if (ci !== 0 && bioplex){
+            filt.push(`(rel.interaction_confidence> ${ci} or rel.interaction_confidence is Null)`)
+        }
 
+        // if ht is true we want to keep it, so when it is not true we want to filter out high
+        if (!ht && biogrid){
+            filt.push(`(rel.Throughput is Null or rel.Throughput=~ ".*Low.*")`)
+        }
+
+        // (rel.evidence_type =~ ".*exp.*|.*pred.*|.*ortho.*" or rel.evidence_type is Null)
+        let orthopred = `.*exp.*|`
+        if (pred){
+            orthopred = orthopred + `.*pred.*|`
+        }
+
+        if (ortho){
+            orthopred = orthopred + `.*ortho.*`
+        }
+
+        if (orthopred.length < 23 && iid){
+            filt.push(`(rel.evidence_type =~` + ` "`+orthopred+`"`+` `+ `or rel.evidence_type is Null)`)
+        }
+
+
+
+        if (filt.length === 0) {
+            startfilt = ``
+        } else {
+            filt = filt.join(' and ')
+            filt = filt + `)`
+            startfilt = startfilt + filt
+        }
+
+
+    
+        console.log(JSON.stringify(q+startfilt+rtrn))
+        const subg = await session.run(q+startfilt+rtrn)
         const end = resolve_results({results: subg, input_list: geneset})
         return end
+
+        //return q+startfilt+rtrn
 
     } catch (error) {
         console.log(error)
@@ -150,82 +196,138 @@ export default async function query(req, res) {
             try {
                 const ret = req.body
 
-                //JSON.parse(req.body)
+                // JSON.parse(req.body)
                 // define input params 
-                //check if gene list is here
+                // check if gene list is here
                 if (ret.geneset === undefined) {
-                    res.status(900).send("geneset is undefined")
+                    throw new Error("geneset is undefined")
                 }
                 // check it is a list of stirngs
                 if (!(Array.isArray(ret.geneset))) {
-                    res.status(400).send("invalid input format, geneset is not an array")
+                    throw new Error("invalid input format, geneset is not an array")
                 }
                 let x; 
                 for (x in ret.geneset) {
                     if (typeof ret.geneset[x] !== 'string'){
-                        res.status(400).send("invalid input format at location " + num.toString(x) + " in geneset")
+                        throw new Error("invalid input format at location " + num.toString(x) + " in geneset")
                     }
                 }
 
-                // //format througput
-                // if (ret.ht === undefined){
-                //     ret.ht = 'true' 
-                // }
+                // format througput
+                if (ret.ht === undefined){
+                    ret.ht = true
+                }
                 
-                // if (ret.lt === undefined){
-                //     ret.lt = 'true' 
-                // }
+                if (typeof ret.ht !== 'boolean'){
+                        throw new Error("invalid input for ht- make sure it is in form 'ht' :' true' or 'ht' : 'false' ")
+                } 
+
+
+                // filtering for predicted and orthologous want to keep by default 
+                if (ret.pred === undefined){
+                    ret.pred = true
+                }
+
+                if (typeof ret.pred !== 'boolean'){
+                        throw new Error("invalid input for pred- make sure it is in form 'pred' : True or 'pred' : False")
+                } 
+
+                if (ret.ortho === undefined){
+                    ret.ortho = true
+                }
+
+                if (typeof ret.ortho !== 'boolean'){
+                        throw new Error("invalid input for ortho- make sure it is in form 'ortho' : True or 'pred' : False")
+                } 
+
+                // ci filtering 
+                if (ret.ci === undefined) {
+                    ret.ci = 0
+                }
+
+                if (typeof ret.ci !== 'number'){
+                    throw new Error("invalid input for ci -  make sure it is a number between 0-1")
+                }
+
+                if (ret.ci > 1){
+                    ret.ci = 0
+                } 
+
+                if (ret.c1 < 0){
+                    ret.ci = 0
+                }
                 
-            
-                // if (ret.ht !== 'true' || ret.ht !== 'false'){
-                //         res.status(400).send("invalid input for ht- make sure it is in form 'ht' :' true' or 'ht' : 'false' ")
+                
+                // biogrid bools
+                if (ret.biogrid === undefined){
+                    ret.biogrid = true
+                }
+
+                if (typeof ret.biogrid !== 'boolean'){
+                        throw new Error("invalid input for biogrid- make sure it is in form 'biogrid' : True or 'biogrid' : False")
+                } 
+
+                // bioplex bools
+                if (ret.bioplex === undefined){
+                    ret.bioplex = true
+                }
+
+                if (typeof ret.bioplex !== 'boolean'){
+                        throw new Error("invalid input for bioplex- make sure it is in form 'bioplex' : True or 'bioplex' : False")
+                } 
+
+                // iid bools 
+                if (ret.iid === undefined){
+                    ret.iid = true
+                }
+
+                if (typeof ret.iid !== 'boolean'){
+                        throw new Error("invalid input for iid- make sure it is in form 'iid' : True or 'iid' : False")
+                } 
+                
+                // string bools 
+                if (ret.string === undefined){
+                    ret.string = true
+                }
+
+                if (typeof ret.string !== 'boolean'){
+                        throw new Error("invalid input for iid- make sure it is in form 'string' : True or 'string' : False")
+                } 
+
+                if (!ret.biogrid && !ret.bioplex && !ret.iid && !ret.string){
+                    throw new Error('Please mark at least one database True')
+                }
+
+
+                // //format databases 
+                // if (ret.databases === undefined){
+                //     ret.databases = ['(?i).*iid.*|.*bioGRID.*|.*STRING.*|.*bioPlex*|']
+                // }
+
+                // // check if its an array
+                // if (!(Array.isArray(ret.databases))) {
+                //     throw new Error("Database format is not a list")
                 // } 
 
-                //  if (ret.lt  !== 'true' || ret.lt  !== 'true'){
-                //      res.status(400).send("invalid input for lt- make sure it is in form 'lt' : 'true' or 'lt' : 'false'")
+                // // make every one into a regex string
+                // let y
+                // let temp = ''
+                // for (y in ret.databases) {
+                //     if (typeof ret.databases[y] !== 'string'){
+                //         throw new Error("invalid input format")
+                //     } else{
+                //         temp = temp + '.*' + ret.databases[y] + '.*|'
+                //     }
                 // }
-
-
-
-                if (typeof ret.ci !== 'number' || typeof ret.ci !== undefined){
-                    res.status(400).send("invalid input for ci -  make sure it is a number between 0-1")
-                } else if (ret.ci < 0 || ret.ci === undefined){
-                        ret.ci = 0
-                } else if (ret.ci > 0){
-                    ret.ci = .95
-                }
-
-
-
-                //format databases 
-                if (ret.databases === undefined){
-                    ret.databases = ['.*iid.*|.*bioGRID.*|.*STRING.*|.*bioPlex 3.0.*']
-                }
-
-                // check if its an array
-                if (!(Array.isArray(ret.databases))) {
-                    res.status(400).send("Database format is not a list")
-                }
-
-                // make every one into a regex string
-                let y
-                let temp = ''
-                for (y in ret.databases) {
-                    if (typeof ret.databases[y] !== 'string'){
-                        res.status(400).send("invalid input format")
-                    } else{
-                        temp = temp + '.*' + ret.databases[y] + '.*|'
-                    }
-                }
-                ret.databases = [temp]
+                // ret.databases = ['(?i)' + temp]
 
 
                 // assign other fields 
-                if (ret.path_length === undefined | isNaN(ret.path_length) | ret.path_length > 2){
+                if (ret.path_length === undefined || isNaN(ret.path_length) || ret.path_length > 2){
                     ret.path_length = 2
                 }
 
-                if (ret.subgraph_size === undefined | isNaN(ret.subgraph_size) | ret.subgraph_size > 200){
+                if (ret.subgraph_size === undefined || isNaN(ret.subgraph_size) || ret.subgraph_size > 200){
                     ret.subgraph_size = 20
                 }
 
@@ -238,19 +340,22 @@ export default async function query(req, res) {
                 const geneset = ret.geneset
                 const path_length = ret.path_length
                 const subgraph_size  = ret.subgraph_size
-                const databases = ret.databases[0]
+                //const databases = ret.databases[0]
                 const ht = ret.ht
-                const lt = ret.lt
                 const ci = ret.ci
+                const pred = ret.pred
+                const ortho = ret.ortho
+                const biogrid = ret.biogrid 
+                const bioplex = ret.bioplex
+                const iid = ret.iid 
+                const string = ret.string
 
-                const results =  await subgraph({session, geneset, path_length, subgraph_size, databases})
-
-                //res.status(200).send(JSON.stringify(results))
+                const results =  await subgraph({session, geneset, path_length, subgraph_size, biogrid, bioplex, iid, string, ci, ht, pred, ortho})
                 
-                res.status(200).send(JSON.stringify(ci))
-        
-
+                res.status(200).send(JSON.stringify(results))
+    
                 session.close();
+                
 
             } catch (error) {
                 console.log(error)

@@ -1,8 +1,8 @@
 import requests
 
 
-payload = {'geneset' : ["ADA", 'STAT3'], 'subgraph_size': 10, "databases" : ["bioGRID", 'iid']} 
+payload = {'geneset' : ["ADA", 'STAT3']} 
 
-res = requests.post("http://localhost:3000/G2Ntest/api/knowledge_graph/ppi_kg", json = payload)
+res = requests.post("http://localhost:3000/G2NKG/api/knowledge_graph/ppi_kg", json = payload)
 
-print(res, res.text)
+print(res.text)
