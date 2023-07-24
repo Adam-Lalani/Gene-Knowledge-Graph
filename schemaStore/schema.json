@@ -146,8 +146,8 @@
     "footer": [
         {
             "type": "github",
-            "code": "https://github.com/MaayanLab/enrichr-kg",
-            "issues": "https://github.com/MaayanLab/enrichr-kg/issues"
+            "code": "https://github.com/MaayanLab/G2N-neo4j",
+            "issues": "https://github.com/MaayanLab/G2N-neo4j/issues"
         },
         {
             "type": "icon",
