@@ -1,7 +1,7 @@
 ## G2N Knowledge Graph Serializations
 
 | Resource | Number of Nodes | Node | Number of Edges| Edges | Date Updated |
-| :--------- | :--------- | :--------- | :--------- |
+| :--------- | :--------- | :--------- | :--------- |:--------- |:--------- |
 | All | 20,454 | [nodes.csv](https://minio.dev.maayanlab.cloud/g2n/Protein.nodes.csv)(260KB)| 1,476,405 |[edges.csv](https://minio.dev.maayanlab.cloud/g2n/Protein.PPI.Protein.edges.csv)(84.1MB)| 07-20-23|
 [BioGRID](https://thebiogrid.org/) | 19,775 | [biogrid.nodes.csv](https://minio.dev.maayanlab.cloud/g2n/nodes/biogrid.nodes.csv) | 796,790  | [biogrid.edges.csv](https://minio.dev.maayanlab.cloud/g2n/edges/Protein.BioGRID.Protein.edges.csv) | 07-26-23|
 [BioPlex3.0](https://bioplex.hms.harvard.edu/) | 13,957 | [bioplex.nodes.csv](https://minio.dev.maayanlab.cloud/g2n/nodes/bioplex.nodes.csv) | 118,162 | [bioplex.edges.csv](https://minio.dev.maayanlab.cloud/g2n/edges/Protein.BioPlex.Protein.edges.csv) | 07-26-23|
