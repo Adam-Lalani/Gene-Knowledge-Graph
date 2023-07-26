@@ -113,7 +113,7 @@
         },
         "tabs": [
             {
-                "endpoint": "/",
+                "endpoint": "/ppi_kg",
                 "label": "Term & Gene Search",
                 "type": "page",
                 "component": "KnowledgeGraph",
@@ -123,7 +123,7 @@
             }, 
 
             {
-                "endpoint": "/ppi_kg",
+                "endpoint": "/",
                 "label": "Subnetwork Construction",
                 "type": "page",
                 "component": "PPI",
