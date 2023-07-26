@@ -124,7 +124,7 @@
 
             {
                 "endpoint": "/ppi_kg",
-                "label": "Protein KG",
+                "label": "Subnetwork Construction",
                 "type": "page",
                 "component": "PPI",
                 "props": {
