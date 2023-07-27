@@ -139,7 +139,16 @@
                 "props":{
                 "src":"https://raw.githubusercontent.com/Adam-Lalani/Gene-Knowledge-Graph/main/downloadsPage/download.md"
                 }
-        }
+        }, 
+        {
+            "endpoint":"/api_documentation",
+            "label":"API Documentation",
+            "type":"markdown",
+            "component":"Markdown",
+            "props":{
+            "src":"https://raw.githubusercontent.com/Adam-Lalani/Gene-Knowledge-Graph/main/API_documentation/docs.md"
+            }
+    }
             
         ]
     },
