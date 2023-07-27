@@ -148,7 +148,16 @@
             "props":{
             "src":"https://raw.githubusercontent.com/Adam-Lalani/Gene-Knowledge-Graph/main/API_documentation/docs.md"
             }
-    }
+    }, 
+    {
+        "endpoint":"/tutorial",
+        "label":"Tutorial",
+        "type":"markdown",
+        "component":"Markdown",
+        "props":{
+        "src":"https://raw.githubusercontent.com/Adam-Lalani/Gene-Knowledge-Graph/main/tutorial/tutorial.md"
+        }
+}
             
         ]
     },
