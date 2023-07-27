@@ -13,7 +13,7 @@
 
 G4N offers a variety of parameters which can be adjusted. The first of which are the number of genes between the inputed, seed genes and the number of nodes in the output. Which PPI databases and what types of PPIs to include can be further filtered with the Filter Database and Interactions button. 
 
-**3. Generate Subgraph**
+**3. Generate Subnetwork**
 
 ![3](https://minio.dev.maayanlab.cloud/g2n/SGTutorial/SG3.png)
 
