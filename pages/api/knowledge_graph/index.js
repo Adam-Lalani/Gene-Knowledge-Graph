@@ -156,7 +156,14 @@ export const resolve_results = ({results,
 							kind: "Relation",
 							relation: relation_type,
 							label: relation_type,
-							properties: {},
+							properties: {
+								id: `${start_node.properties.label}_${relation_type}_${end_node.properties.label}`,
+								label: relation_type,
+								source_label: start_node.properties.label,
+								target_label: end_node.properties.label,
+								...properties[`${start_node.properties.label}_${end_node.properties.label}`] || {},
+								...process_properties(relation.properties),
+							},
 							...(get_edge_color({relation, record, aggr_scores, ...colors[relation_type]})),
 							directed: relation.properties.directed ? 'triangle': 'none'
 						} 

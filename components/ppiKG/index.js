@@ -28,6 +28,14 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress  from '@mui/material/CircularProgress';
 import HubIcon from '@mui/icons-material/Hub';
 import Icon from '@mui/icons-material/Hub';
+import Link from '@mui/material/Link';
+import PaletteIcon from '@mui/icons-material/Palette';
+import Avatar from '@mui/material/Avatar'; 
+import TableRowsOutlinedIcon from '@mui/icons-material/TableRowsOutlined';
+import * as schema from '../../public/schema.json'
+
+const NetworkTable =  dynamic(() => import('../network_table'))
+
 
 const headingStyle = {
   color: '#3f51b5',
@@ -73,6 +81,28 @@ export const layouts = {
 }
 
 export default function TextBox(){
+  // node colors 
+  const [color1, setColor1] = useState("#aff0ca")
+  const [color2, setColor2] = useState('#ade7ff')
+  const [colormenu, setColormenu] = React.useState(null);
+  const colormenuOpen = Boolean(colormenu);
+
+  const handleColor1 = (event) => {
+    setColor1(event.target.value); 
+  };
+  const handleColor2 = (event) => {
+    setColor2(event.target.value); 
+  };
+
+  const resetColor  = (event) => {
+    setColor1("#aff0ca"); 
+    setColor2('#ade7ff'); 
+  };
+
+  // table view
+  const [table, setTable] = React.useState(null);
+  const tableOpen = Boolean(table);
+  const tableref = useRef(null);
 
   // cytoscape components 
   const cyref = useRef(null);
@@ -191,7 +221,7 @@ const processCI  = (event, newVal) => {
     const processed = text.toUpperCase().split(/[\s,]+/)
     console.log(processed)
     setLoading(true);
-    const data = await getQ({processed:processed, subG: size, hops: path, bg:biogrid, hight:ht, st:stringdb, iidb:iid, ot:ortho, pd: pred, cI:ci, bp:bioplex});
+    const data = await getQ({processed:processed, subG: size, hops: path, bg:biogrid, hight:ht, st:stringdb, iidb:iid, ot:ortho, pd: pred, cI:ci, bp:bioplex, C1: color1, C2: color2});
     setLoading(false)
     setGenes(data);
     setLayout(Object.keys(layouts)[0])
@@ -223,8 +253,8 @@ const processExample = async () => {
 
   return (
     <div> 
-      <h1 style={headingStyle}>Protein Interaction KG</h1>
-      <p style={bodStyle}>Enter a list of mammalian genes or proteins in Entrez gene symbol format to receive results of a protein-protein interactions (PPI) subnetwork that connects the enriched genes/proteins with known protein-protein interactions using Neo4j, a graph database. G2N connects input list of genes/proteins using the shortest path algorithms using known PPI from the selected databases.</p>
+      <h1 style={headingStyle}>Genes4Networks: Protein-Protein Interaction Knowledge Graph Server</h1>
+      <p style={bodStyle}> Genes4Networks (G4N) is a tool made for biologist that connects enriched genes/proteins with know protein-protein interactions (PPI) from selected databases to form a subnetwork. G4N relies on a shortest-path algorithm from neo4j, a graph database. Enter a list of mammalian genes or proteins in Entrez gene symbol format to receive results of a PPI subnetwork.</p>
 
     <Grid style={{paddingBottom: 10}} alignItems="center" justifyContent={"space-between"} sx={{width:'100%'}}>
    
@@ -250,7 +280,7 @@ const processExample = async () => {
     />
     <Stack direction='row' justifyContent="space-between">
     <Button variant="contained" onClick={processText} size="large">
-      Process
+      Generate Subnetwork
     </Button> 
 
     <Button variant="text" onClick={processExample} size="large">
@@ -265,7 +295,7 @@ const processExample = async () => {
 
     <Grid item xs = {7}  sm = {6} md = {6} xl = {6} lg ={6}> 
     <Stack spacing = {1.885}>
-    <Typography gutterBottom>Nodes Between Proteins</Typography>
+    <Typography gutterBottom>Nodes between Seed Genes</Typography>
     <Slider    
       value = {path}
       onChange={processPath} 
@@ -278,7 +308,7 @@ const processExample = async () => {
       min={0}
       max={2}
     />
-    <Typography gutterBottom>Nodes Between Proteins</Typography>
+    <Typography gutterBottom>Number of Nodes in Subnetwork</Typography>
     <Slider    
       value = {size}
       onChange={processSubg}
@@ -299,7 +329,7 @@ const processExample = async () => {
         aria-expanded={open2 ? 'true' : undefined}
         onClick={(e)=>handleClickMenu(e, setAnchorEl2)}
       >
-        Filter Edges
+        Filter Database and Interactions 
       </Button>
       <Menu
         id="basic-menu"
@@ -314,7 +344,7 @@ const processExample = async () => {
         <Tabs value={tab} onChange={handleTabChange}>
         <Tab label="BioGRID" />
         <Tab label="BioPlex" />
-        <Tab label="Integrated Interactions Database" />
+        <Tab label="IID" />
         <Tab label="STRING" />
         </Tabs>
         <Box sx={{ padding: 2 }}>
@@ -327,7 +357,7 @@ const processExample = async () => {
                color="primary"
                inputProps={{ 'aria-label': 'primary checkbox' }}
               />
-          <label htmlFor="checkbox">Include BioGRID</label>
+          <label htmlFor="checkbox">Include <Link href="https://thebiogrid.org/" target="_blank" rel="noopener noreferrer">BioGRID</Link></label>
           <Box></Box>
              <Checkbox
                checked={ht}
@@ -349,7 +379,7 @@ const processExample = async () => {
              color="primary"
              inputProps={{ 'aria-label': 'primary checkbox' }}
             />
-        <label htmlFor="checkbox">Include BioPlex</label>
+        <label htmlFor="checkbox">Include <Link href="https://bioplex.hms.harvard.edu/" target="_blank" rel="noopener noreferrer">BioPlex</Link></label>
         <Typography gutterBottom>Interaction Confidence Interval</Typography>
         <Slider    
           value = {ci}
@@ -375,7 +405,7 @@ const processExample = async () => {
               color="primary"
               inputProps={{ 'aria-label': 'primary checkbox' }}
              />
-         <label htmlFor="checkbox">Include IID</label>
+         <label htmlFor="checkbox">Include <Link href="http://iid.ophid.utoronto.ca/" target="_blank" rel="noopener noreferrer">IID</Link></label>
          <Box></Box>
             <Checkbox
               checked={pred}
@@ -406,7 +436,7 @@ const processExample = async () => {
                color="primary"
                inputProps={{ 'aria-label': 'primary checkbox' }}
               />
-          <label htmlFor="checkbox">Include STRING</label>
+          <label htmlFor="checkbox">Include <Link href="https://string-db.org/" target="_blank" rel="noopener noreferrer">STRING</Link></label>
           </Box>
         )}
         
@@ -523,9 +553,98 @@ const processExample = async () => {
                           download(dataUrl, "network.svg")
                       });
                   }}>SVG</MenuItem>
-              </Menu> 
- 
+                </Menu> 
+                <Tooltip title={"Table View"}>
+                <IconButton
+                 onClick={(e)=>handleClickMenu(e, setTable)}
+                 aria-controls={table!==null ? 'basic-menu' : undefined}
+                 aria-haspopup="true"
+                 aria-expanded={table!==null ? 'true' : undefined}
+              >
+                <TableRowsOutlinedIcon/>
+                </IconButton>
+                </Tooltip>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={table}
+                  open={tableOpen}
+                  onClose={()=>handleCloseMenu(setTable)}
+                  MenuListProps={{
+                      'aria-labelledby': 'basic-button',
+                  }}
+              >
+              <CardContent  style={{width: 900}}>
+                <Grid item xs={12} sx={{minHeight: 700}}>
+               <div ref={tableref} >
+                <NetworkTable data={genes} schema={schema}/>
+              </div>
+              </Grid>
+              </CardContent>
+              </Menu>
 
+                <Tooltip title={"Edit Colors"}>
+                <IconButton
+                 onClick={(e)=>handleClickMenu(e, setColormenu)}
+                 aria-controls={colormenu!==null ? 'basic-menu' : undefined}
+                 aria-haspopup="true"
+                 aria-expanded={colormenu!==null ? 'true' : undefined}
+              >
+                <PaletteIcon/>
+                </IconButton>
+                </Tooltip>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={colormenu}
+                  open={colormenuOpen}
+                  onClose={()=>handleCloseMenu(setColormenu)}
+                  MenuListProps={{
+                      'aria-labelledby': 'basic-button',
+                  }}
+              > 
+               <CardContent  style={{width: 200}}>
+                <Stack spacing={2}>
+               <TextField
+                label= "Change Color 1"
+                id="outlined-basic"
+                size = {'small'}
+                fullWidth
+                value={color1}
+                onChange={handleColor1}
+              />
+              <TextField
+                label= "Change Color 2"
+                id="outlined-basic"
+                size = {'small'}
+                fullWidth
+                value={color2}
+                onChange={handleColor2}
+              />
+
+              <Button
+                variant="contained"
+                id="basic-button"
+                onClick={resetColor}
+              >
+              Reset Colors 
+              </Button>
+                
+              </Stack>
+              </CardContent>
+              </Menu> 
+             
+            <Stack>
+            <Grid container alignItems={"center"} spacing={1}>
+            <Grid item><Avatar sx={{background: color1}}> </Avatar></Grid>
+            <Grid item><Typography variant="subtitle1">Seed Gene Node</Typography></Grid>   
+            </Grid>
+            </Stack>
+            <Stack>
+            <Grid container alignItems={"center"} spacing={1}>
+            <Grid item><Avatar sx={{background: color2}}> </Avatar></Grid>
+            <Grid item><Typography variant="subtitle1">Intermediate Gene Node</Typography></Grid>   
+            </Grid>
+            </Stack>
+             
 
           </Stack>
           <Cytoscape

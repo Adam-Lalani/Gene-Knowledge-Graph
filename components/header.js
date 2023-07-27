@@ -246,7 +246,7 @@ const Header = ({schema, ...rest}) => {
 		<Grid item xs={12} align="center">
 			<Grid container justifyContent={"space-between"} alignItems={"center"} style={{padding: 15, marginBottom: 10, background:( schema.header.background || {}).backgroundColor}}>
 				<Grid item>
-					<Button href={`${process.env.NEXT_PUBLIC_HOST}/G2NKG/ppi_kg`}>
+					<Button href={`${process.env.NEXT_PUBLIC_HOST}${process.env.NEXT_PUBLIC_PREFIX}`}>
 						<Stack direction={"row"} alignItems="center">
 							<div style={{height: schema.header.icon.height || 30, 
 								minWidth: schema.header.icon.width || 30}}>

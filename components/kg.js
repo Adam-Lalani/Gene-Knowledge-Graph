@@ -62,6 +62,21 @@ const Checkbox = dynamic(() => import('@mui/material/Checkbox'));
 const FormControlLabel = dynamic(() => import('@mui/material/FormControlLabel'));
 
 
+const headingStyle = {
+  color: '#3f51b5',
+  //fontFamily: 'Roboto',
+  fontWeight: 'bold',
+  textAlign: 'center'
+  
+};
+
+const bodStyle = {
+  color: '#545d6b',
+  //'#3b609c',
+  //fontFamily: 'Roboto',
+  fontWeight: 'bold',
+};
+
 const NetworkTable =  dynamic(() => import('./network_table'))
 export const layouts = {
   "Force-directed": {
@@ -273,6 +288,7 @@ export default function KnowledgeGraph({entries, edges=[], default_relations, no
       setSelected(selected_edges)
       setElements(results)
       setLoading(false)
+      console.log(results)
       setData(results)
       setId(id+1)
     } catch (error) {
@@ -369,6 +385,9 @@ export default function KnowledgeGraph({entries, edges=[], default_relations, no
   }, [])
 
   return (
+    <div> 
+      <h1 style={headingStyle}> Term and Gene Search</h1>
+      <p style={bodStyle}>Term and Gene Search checks the existing datasets for a gene and returns a graph of the gene and its related protein-protein interactions. Term and Gene search can also find the shortest path between two genes if a path exists.</p>
     <Grid container justifyContent="space-around" spacing={2}>
       <Grid item xs={12}>
         <Grid container spacing={2} justifyContent="flex-start" alignItems="center" >
@@ -1232,5 +1251,6 @@ export default function KnowledgeGraph({entries, edges=[], default_relations, no
       </Grid>
       }
     </Grid>
+    </div>
   )
 }

@@ -2,18 +2,24 @@ import fetch from "node-fetch";
 import neo4j from "neo4j-driver"
 import { neo4jDriver } from "../../../../utils/neo4j"
 
+let keyCol = "#aff0ca"
+
+
+let regCol = '#ade7ff'
+
 export const node_colour = ({label, id, input_list}) => {
     if (input_list.includes(label) || input_list.includes(id)){
-        return "#aff0ca"
+        return keyCol
+        //"#aff0ca"
          //"#3f51b5"
     } 
     // #ADD8E6"
-    return '#ade7ff'
+    return regCol
+    //'#ade7ff'
     // "#a7d5f2"
     //"#3b609c"
     
 }
-
 
 
 export const resolve_results = ({results, input_list}) => {
@@ -50,26 +56,26 @@ export const resolve_results = ({results, input_list}) => {
 					})
 					path.push({ 
 						data: {
-							source: start_node.properties.id,
-							target: end_node.properties.id,
+							source: start_node.properties.id, 
+							target: end_node.properties.id, 
 							kind: "Relation",
 							relation: relation_type,
 							label: relation_type,
                             source_database: relation.properties['source_database'] || "",
 							properties: {
-                                source: start_node.properties.id,
-							    target: end_node.properties.id,
+                                id: `${start_node.properties.label}_${relation_type}_${end_node.properties.label}`,
+                                source_label: start_node.properties.label,
+							    target_label: end_node.properties.label,
 							    kind: "Relation",
 							    relation: relation_type,
 							    label: relation_type,
                                 source_database: relation.properties['source_database'] || "",
-                                Experimental_System: relation.properties['experimental_system'] || "",
-                                Evidence_Type: relation.properties['evidence_type'] || "",
-                                Throughput: relation.properties['Throughput'] || "",
+                                experimental_system: relation.properties['experimental_system'] || "",
+                                evidence_type: relation.properties['evidence_type'] || "",
+                                throughput: relation.properties['Throughput'] || "",
                                 pmids: relation.properties['pmids'] || "",
-                                Interaction_Confidence_bioplex: relation.properties['interaction_confidence'] || "",
-                                Combined_Score_stringDB : relation.properties['combined_score'] || "",
-                                
+                                interaction_confidence: relation.properties['interaction_confidence'] || "",
+                                combined_score : relation.properties['combined_score'] || "",
                             },
 
 							lineColor: "#b3b3b3",
@@ -83,7 +89,7 @@ export const resolve_results = ({results, input_list}) => {
 							label: end_node.properties.label || end_node.properties.id,
 							color: node_colour({label: end_node.properties.label, id: end_node.properties.id, input_list: input_list}),
                             properties: {
-                                id: start_node.properties.id,
+                                id: end_node.properties.id,
 							    kind: start_kind,
 							    label: start_node.properties.label || start_node.properties.id,
                             }
@@ -169,7 +175,6 @@ const subgraph = async ({session, geneset, path_length, subgraph_size, biogrid, 
             filt = filt + `)`
             startfilt = startfilt + filt
         }
-
 
     
         console.log(JSON.stringify(q+startfilt+rtrn))
@@ -298,28 +303,15 @@ export default async function query(req, res) {
                     throw new Error('Please mark at least one database True')
                 }
 
+                const colorTest = /^#?([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/;
 
-                // //format databases 
-                // if (ret.databases === undefined){
-                //     ret.databases = ['(?i).*iid.*|.*bioGRID.*|.*STRING.*|.*bioPlex*|']
-                // }
+                if (colorTest.test(ret.c1)){
+                    keyCol = ret.c1
+                }
 
-                // // check if its an array
-                // if (!(Array.isArray(ret.databases))) {
-                //     throw new Error("Database format is not a list")
-                // } 
-
-                // // make every one into a regex string
-                // let y
-                // let temp = ''
-                // for (y in ret.databases) {
-                //     if (typeof ret.databases[y] !== 'string'){
-                //         throw new Error("invalid input format")
-                //     } else{
-                //         temp = temp + '.*' + ret.databases[y] + '.*|'
-                //     }
-                // }
-                // ret.databases = ['(?i)' + temp]
+                if (colorTest.test(ret.c2)){
+                    regCol = ret.c2
+                }
 
 
                 // assign other fields 
@@ -335,6 +327,7 @@ export default async function query(req, res) {
                 const session = neo4jDriver.session({
                     defaultAccessMode: neo4j.session.READ
                 })
+
 
                 // call subgraph function
                 const geneset = ret.geneset
