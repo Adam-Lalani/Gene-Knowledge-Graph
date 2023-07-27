@@ -20,11 +20,15 @@ G4N offers a variety of parameters which can be adjusted. The first of which are
 **4. Download Results**
 
 ![4](https://minio.dev.maayanlab.cloud/g2n/SGTutorial/SG4.png)
+
 ## Using G4N Terms and Gene Search - One Gene
 
 **1. Select Gene**
+
 ![5](https://minio.dev.maayanlab.cloud/g2n/GSTutorial/GS1.png)
+
 **2. Save Network**
+
 ![6](https://minio.dev.maayanlab.cloud/g2n/GSTutorial/GS2.png)
 
 ## Using G4N Terms and Gene Search - Shortest Path 
