@@ -6,6 +6,14 @@ This documentation describes the API for G4N. This API is for developers who wan
 
 In this documentation, we will use Python to demo the API requests. The code can be used as is or as a template for your own modifications in Python or another language. We use the requests library, which can be installed with pip.
 
+## Build Instructions 
+This project was deployed using docker. 
+```
+docker-compose build kg 
+
+docker-compose push kg
+```
+
 ## Generate Geneset Subgraph 
 
 | Method | URL | Input | Returns |
