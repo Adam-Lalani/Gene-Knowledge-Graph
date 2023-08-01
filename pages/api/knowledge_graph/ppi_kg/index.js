@@ -22,8 +22,13 @@ export const node_colour = ({label, id, input_list}) => {
 }
 
 
+
+
+
+
 export const resolve_results = ({results, input_list}) => {
     try{
+        const degreeMap = new Map()
 		const res = results.records.flatMap(record => {
 			const relations = record.get('r')
 			const nodes = record.get('n').reduce((acc, i)=>({
@@ -31,7 +36,26 @@ export const resolve_results = ({results, input_list}) => {
 				[i.identity]: i
 			}), {})
 			const path = []
+           
 			if (relations.length > 0) {
+                for (const relation of relations){
+                    const start_node = nodes[relation.start].properties.id
+                    const end_node = nodes[relation.end].properties.id
+
+                    if (degreeMap[start_node]) {
+                        degreeMap[start_node] += 1;
+                    } else {
+                        degreeMap[start_node] = 1;
+                    }
+
+                    if (degreeMap[end_node]) {
+                        degreeMap[end_node] += 1;
+                    } else {
+                        degreeMap[end_node] = 1;
+                    }
+
+                }
+                // add degrees in 
 				for (const relation of relations) {
 					const start_node = nodes[relation.start]
 					const end_node = nodes[relation.end]
@@ -46,11 +70,13 @@ export const resolve_results = ({results, input_list}) => {
 							kind: start_kind,
 							label: start_node.properties.label || start_node.properties.id,
                             // add coloring scheme 
+                            degree: degreeMap[start_node.properties.id],
 							color: node_colour({label: start_node.properties.label,id: start_node.properties.id, input_list: input_list}),
                             properties: {
                                 id: start_node.properties.id,
 							    kind: start_kind,
 							    label: start_node.properties.label || start_node.properties.id,
+                                degree: degreeMap[start_node.properties.id],
                             }
 						} 
 					})
@@ -87,11 +113,13 @@ export const resolve_results = ({results, input_list}) => {
 							id: end_node.properties.id,
 							kind: end_kind,
 							label: end_node.properties.label || end_node.properties.id,
+                            degree: degreeMap[end_node.properties.id],
 							color: node_colour({label: end_node.properties.label, id: end_node.properties.id, input_list: input_list}),
                             properties: {
                                 id: end_node.properties.id,
 							    kind: start_kind,
-							    label: start_node.properties.label || start_node.properties.id,
+							    label: end_node.properties.label || end_node.properties.id,
+                                degree: degreeMap[end_node.properties.id],
                             }
 						} 
 					})
@@ -342,6 +370,7 @@ export default async function query(req, res) {
                 const bioplex = ret.bioplex
                 const iid = ret.iid 
                 const string = ret.string
+
 
                 const results =  await subgraph({session, geneset, path_length, subgraph_size, biogrid, bioplex, iid, string, ci, ht, pred, ortho})
                 
