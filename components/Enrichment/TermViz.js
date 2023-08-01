@@ -11,6 +11,7 @@ const Tabs = dynamic(() => import('@mui/material/Tabs'));
 const Tab = dynamic(() => import('@mui/material/Tab'));
 const EnrichmentBar = dynamic(() => import('./EnrichmentBar'));
 
+
 const header = [
     {
         field: 'enrichr_label',

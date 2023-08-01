@@ -20,7 +20,7 @@
                 {
                 "label": "Links in Subnetwork",
                 "text": "${degree}",
-                "type": "text"
+                "type": "number"
             }
             ],
             "relation": [],

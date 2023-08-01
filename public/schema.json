@@ -16,7 +16,12 @@
                     "label": "label",
                     "text": "${label}",
                     "type": "text"
-                }
+                },
+                {
+                "label": "Links in Subnetwork",
+                "text": "${degree}",
+                "type": "number"
+            }
             ],
             "relation": [],
             "search": [
@@ -58,23 +63,18 @@
                     "type": "text"
                 },
                 {
+                    "label": "Source Database",
+                    "text": "${source_database}",
+                    "type": "text"
+                },
+                {
                     "label": "Interaction Confidence",
-                    "text": "${Interaction Confidence}",
+                    "text": "${interaction_confidence}",
                     "type": "text"
                 },
                 {
                     "label": "Experimental System",
-                    "text": "${Experimental System}",
-                    "type": "text"
-                },
-                {
-                    "label": "Source Database",
-                    "text": "${Source Database}",
-                    "type": "text"
-                },
-                {
-                    "label": "pmids",
-                    "text": "${pmids}",
+                    "text": "${experimental_system}",
                     "type": "text"
                 },
                 {
@@ -83,18 +83,8 @@
                     "type": "text"
                 },
                 {
-                    "label": "combined score",
-                    "text": "${combined_score}",
-                    "type": "text"
-                },
-                {
-                    "label": "normalized score",
-                    "text": "${normalized_score}",
-                    "type": "text"
-                },
-                {
-                    "label": "valid",
-                    "text": "${valid}",
+                    "label": "pmids",
+                    "text": "${pmids}",
                     "type": "text"
                 }
             ]

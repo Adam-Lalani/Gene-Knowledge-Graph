@@ -1045,7 +1045,7 @@ export default function KnowledgeGraph({entries, edges=[], default_relations, no
                     // 'opacity': '0.5',
                     'line-color': 'data(lineColor)',
                     'width': '3',
-                    // 'label': 'data(label)',
+                   // 'label': 'data(source_database)',
                     "text-rotation": "autorotate",
                     "text-margin-x": "0px",
                     "text-margin-y": "0px",

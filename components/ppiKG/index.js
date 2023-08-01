@@ -32,9 +32,10 @@ import Link from '@mui/material/Link';
 import PaletteIcon from '@mui/icons-material/Palette';
 import Avatar from '@mui/material/Avatar'; 
 import TableRowsOutlinedIcon from '@mui/icons-material/TableRowsOutlined';
-import * as schema from '../../public/schema.json'
 
 const NetworkTable =  dynamic(() => import('../network_table'))
+
+const DegreeTable = dynamic(() => import('./degreesTable'))
 
 
 const headingStyle = {
@@ -50,6 +51,7 @@ const bodStyle = {
   fontWeight: 'bold',
 };
 
+const degreeMap = new Map()
 
 
 const Cytoscape = dynamic(() => import('../Cytoscape'), { ssr: false })
@@ -226,6 +228,7 @@ const processCI  = (event, newVal) => {
     setGenes(data);
     setLayout(Object.keys(layouts)[0])
     setId(id+1)
+    console.log(degreeMap)
 };
 
 const processExample = async () => {
@@ -576,7 +579,7 @@ const processExample = async () => {
               <CardContent  style={{width: 900}}>
                 <Grid item xs={12} sx={{minHeight: 700}}>
                <div ref={tableref} >
-                <NetworkTable data={genes} schema={schema}/>
+                <DegreeTable data={genes}/>
               </div>
               </Grid>
               </CardContent>
@@ -666,8 +669,15 @@ const processExample = async () => {
                   'font-size': '22px',
                   "text-valign": "center",
                   "text-halign": "center",
-                  'width': '110',
+                  'width':  '110', 
+                  //function(ele){ return Math.max(1, Math.ceil(ele.degree()/2)) * 10; },
+                  //function(ele){ return ele.degree(); },
+                  //'110',
                   'height': '110'
+                  //function(ele){degreeMap.set('label',ele.degree()); return '110'} 
+                  //function(ele){ return Math.max(1, Math.ceil(ele.degree()/2)) * 10; },
+                  //function(ele){ return ele.degree(); },
+                  //'110'
                   //'width': `mapData(node_type, 0, 1, 70, 150)`,
                  // 'height': `mapData(node_type, 0, 1, 70, 150)`,
                 }
