@@ -68,7 +68,7 @@ const header1 = [
 const header2 = [
     {
         field: 'id',
-        headerName: "Protein ID",
+        headerName: "Gene/Protein ID",
         flex: 1,
      //   style: {flexDirection: "row"},
         align: "left"
@@ -83,6 +83,11 @@ const header2 = [
     {
         field: 'degree',
         headerName: "Degree",
+        align: "left"
+    },
+    {
+        field: 'seed',
+        headerName: "Seed",
         align: "left"
     }
 ]
@@ -126,10 +131,12 @@ const DegreeTable = ({data}) => {
                     const id2 = dt.data.id
                     const label2 = dt.data.label
                     const degrees = dt.data.degree
+                    const seedV = dt.data.seed
                     nodes[id2] = {
                         id: id2,
                         label : label2,
-                        degree: parseInt(degrees)
+                        degree: parseInt(degrees),
+                        seed: seedV
                     }
                 } // set entries 
             }
@@ -144,11 +151,11 @@ const DegreeTable = ({data}) => {
             <Card style={{marginBottom: 10}}> 
             <CardContent>
             <Tabs value={tab} onChange={handleTabChange}>
-            <Tab label="Edges" />
             <Tab label="Nodes" />
+            <Tab label="Edges" />
             </Tabs>
             <Box sx={{ padding: 2 }}>
-            {tab === 0 && (
+            {tab === 1 && (
                 <Grid item xs={12}>
                     <DataGrid
                         initialState={{
@@ -170,7 +177,7 @@ const DegreeTable = ({data}) => {
                     />
                 </Grid>
              )}
-             {tab === 1 && (
+             {tab === 0 && (
                 <Box>
                <Grid item xs={12}>
                     <DataGrid

@@ -71,7 +71,8 @@ export const resolve_results = ({results, input_list}) => {
 							label: start_node.properties.label || start_node.properties.id,
                             // add coloring scheme 
                             degree: degreeMap[start_node.properties.id],
-							color: node_colour({label: start_node.properties.label,id: start_node.properties.id, input_list: input_list}),
+                            color: node_colour({label: start_node.properties.label, id: start_node.properties.id, input_list: input_list}),
+                            seed: (input_list.includes(start_node.properties.label) || input_list.includes(start_node.properties.id)),
                             properties: {
                                 id: start_node.properties.id,
 							    kind: start_kind,
@@ -115,6 +116,7 @@ export const resolve_results = ({results, input_list}) => {
 							label: end_node.properties.label || end_node.properties.id,
                             degree: degreeMap[end_node.properties.id],
 							color: node_colour({label: end_node.properties.label, id: end_node.properties.id, input_list: input_list}),
+                            seed: (input_list.includes(end_node.properties.label) || input_list.includes(end_node.properties.id)),
                             properties: {
                                 id: end_node.properties.id,
 							    kind: start_kind,

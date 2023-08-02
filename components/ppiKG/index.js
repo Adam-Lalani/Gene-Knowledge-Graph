@@ -257,7 +257,7 @@ const processExample = async () => {
   return (
     <div> 
       <h1 style={headingStyle}>Genes4Networks: Protein-Protein Interaction Knowledge Graph Server</h1>
-      <p style={bodStyle}> Genes4Networks (G4N) is a tool made for biologist that connects enriched genes/proteins with know protein-protein interactions (PPI) from selected databases to form a subnetwork. G4N relies on a shortest-path algorithm from neo4j, a graph database. Enter a list of mammalian genes or proteins in Entrez gene symbol format to receive results of a PPI subnetwork.</p>
+      <p style={bodStyle}>Genes4Networks can be used to construct protein-protein interaction (PPI) subnetworks given a set of human or mouse genes/proteins. To construct these subnetworks, Genes4Networks is utilizing protein-protein interactions from several publicly available open PPI databases and the shortest path algorithm.</p>
 
     <Grid style={{paddingBottom: 10}} alignItems="center" justifyContent={"space-between"} sx={{width:'100%'}}>
    
@@ -272,7 +272,7 @@ const processExample = async () => {
 
     <Stack spacing = {2}>
     <TextField
-      label= "Enter Gene List"
+      label= "Enter Gene/Protein List"
       id="outlined-basic"
       size = {'medium'}
       fullWidth
@@ -298,7 +298,7 @@ const processExample = async () => {
 
     <Grid item xs = {7}  sm = {6} md = {6} xl = {6} lg ={6}> 
     <Stack spacing = {1.885}>
-    <Typography gutterBottom>Nodes between Seed Genes</Typography>
+    <Typography gutterBottom>Nodes between Seed Genes/Proteins</Typography>
     <Slider    
       value = {path}
       onChange={processPath} 
@@ -311,7 +311,7 @@ const processExample = async () => {
       min={0}
       max={2}
     />
-    <Typography gutterBottom>Number of Nodes in Subnetwork</Typography>
+    <Typography gutterBottom> Nodes in Subnetwork</Typography>
     <Slider    
       value = {size}
       onChange={processSubg}
@@ -638,13 +638,13 @@ const processExample = async () => {
             <Stack>
             <Grid container alignItems={"center"} spacing={1}>
             <Grid item><Avatar sx={{background: color1}}> </Avatar></Grid>
-            <Grid item><Typography variant="subtitle1">Seed Gene Node</Typography></Grid>   
+            <Grid item><Typography variant="subtitle1">Seed Gene/Protein Node</Typography></Grid>   
             </Grid>
             </Stack>
             <Stack>
             <Grid container alignItems={"center"} spacing={1}>
             <Grid item><Avatar sx={{background: color2}}> </Avatar></Grid>
-            <Grid item><Typography variant="subtitle1">Intermediate Gene Node</Typography></Grid>   
+            <Grid item><Typography variant="subtitle1">Intermediate Gene/Protein Node</Typography></Grid>   
             </Grid>
             </Stack>
              
