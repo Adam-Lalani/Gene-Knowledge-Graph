@@ -81,6 +81,11 @@ const header2 = [
         align: "left"
     },
     {
+        field: 'zscore',
+        headerName: "Z-Score",
+        align: "left"
+    },
+    {
         field: 'degree',
         headerName: "Degree",
         align: "left"
@@ -89,7 +94,12 @@ const header2 = [
         field: 'seed',
         headerName: "Seed",
         align: "left"
-    }
+    },
+    {
+        field: 'total_degree',
+        headerName: "Degree in Background",
+        align: "left"
+    },
 ]
 
 
@@ -107,6 +117,8 @@ const DegreeTable = ({data}) => {
 		if (data) {
 			const nodes = {}
             const edges ={}
+
+
 			for (const dt of data) {
                 if (dt['data']['kind'] === 'Relation'){
                     const start = dt.data.source
@@ -132,11 +144,15 @@ const DegreeTable = ({data}) => {
                     const label2 = dt.data.label
                     const degrees = dt.data.degree
                     const seedV = dt.data.seed
+                    const zscore = dt.data.zscore
+                    const td = dt.data.total_degree
                     nodes[id2] = {
                         id: id2,
                         label : label2,
                         degree: parseInt(degrees),
-                        seed: seedV
+                        seed: seedV,
+                        zscore: parseFloat(zscore),
+                        total_degree: parseInt(td)
                     }
                 } // set entries 
             }

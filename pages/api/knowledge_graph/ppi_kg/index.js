@@ -22,12 +22,49 @@ export const node_colour = ({label, id, input_list}) => {
 }
 
 
+export const computeZ = async ({inputs}) => {
+    let d = 30000
+    let c = 0
 
+    // compute number of edges on total subgraph
+    for (const vals of inputs){
+        if (vals['data']['kind'] === 'Relation'){
+            c += 1
+        }
+    }
+
+
+   // check if it is not a seed    
+    for (const dt of inputs){
+        if (dt["data"]["kind"] === 'Protein'){
+             // if not seed compute pval and add to object
+            if (!dt.data.seed){
+                // a is degree
+                const a = dt.data.degree
+                // b is total_degree
+                const b = dt.data.total_degree
+                //compute pval
+                const aoverc = (a/parseFloat(c))
+                const boverd = (b/parseFloat(d))
+                const top = aoverc - boverd
+                const bottom = Math.sqrt((boverd * (1-boverd))/parseFloat(d))
+                const zscore = top/bottom
+                dt["data"]["zscore"] = zscore
+               
+            }
+      
+
+        }     
+    }
+   return inputs
+
+}
 
 
 
 export const resolve_results = ({results, input_list}) => {
     try{
+        
         const degreeMap = new Map()
 		const res = results.records.flatMap(record => {
 			const relations = record.get('r')
@@ -36,12 +73,11 @@ export const resolve_results = ({results, input_list}) => {
 				[i.identity]: i
 			}), {})
 			const path = []
-           
 			if (relations.length > 0) {
                 for (const relation of relations){
                     const start_node = nodes[relation.start].properties.id
                     const end_node = nodes[relation.end].properties.id
-
+               
                     if (degreeMap[start_node]) {
                         degreeMap[start_node] += 1;
                     } else {
@@ -53,6 +89,9 @@ export const resolve_results = ({results, input_list}) => {
                     } else {
                         degreeMap[end_node] = 1;
                     }
+                    
+                    
+
 
                 }
                 // add degrees in 
@@ -73,6 +112,8 @@ export const resolve_results = ({results, input_list}) => {
                             degree: degreeMap[start_node.properties.id],
                             color: node_colour({label: start_node.properties.label, id: start_node.properties.id, input_list: input_list}),
                             seed: (input_list.includes(start_node.properties.label) || input_list.includes(start_node.properties.id)),
+                            total_degree: start_node.properties.degree['low'],
+                            zscore: 0.0,
                             properties: {
                                 id: start_node.properties.id,
 							    kind: start_kind,
@@ -117,6 +158,8 @@ export const resolve_results = ({results, input_list}) => {
                             degree: degreeMap[end_node.properties.id],
 							color: node_colour({label: end_node.properties.label, id: end_node.properties.id, input_list: input_list}),
                             seed: (input_list.includes(end_node.properties.label) || input_list.includes(end_node.properties.id)),
+                            total_degree: end_node.properties.degree['low'],
+                            zscore: 0.0,
                             properties: {
                                 id: end_node.properties.id,
 							    kind: start_kind,
@@ -129,7 +172,9 @@ export const resolve_results = ({results, input_list}) => {
 			} 
 			return path
 		  })
-		return res
+          
+		return computeZ({inputs: res})
+        //return res
 	} catch(error){
        return error.message
     }
@@ -206,12 +251,10 @@ const subgraph = async ({session, geneset, path_length, subgraph_size, biogrid, 
             startfilt = startfilt + filt
         }
 
-    
         console.log(JSON.stringify(q+startfilt+rtrn))
         const subg = await session.run(q+startfilt+rtrn)
         const end = resolve_results({results: subg, input_list: geneset})
         return end
-
         //return q+startfilt+rtrn
 
     } catch (error) {

@@ -51,8 +51,6 @@ const bodStyle = {
   fontWeight: 'bold',
 };
 
-const degreeMap = new Map()
-
 
 const Cytoscape = dynamic(() => import('../Cytoscape'), { ssr: false })
 
@@ -228,7 +226,6 @@ const processCI  = (event, newVal) => {
     setGenes(data);
     setLayout(Object.keys(layouts)[0])
     setId(id+1)
-    console.log(degreeMap)
 };
 
 const processExample = async () => {
