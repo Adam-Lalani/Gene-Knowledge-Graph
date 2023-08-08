@@ -295,7 +295,7 @@ const processExample = async () => {
 
     <Grid item xs = {7}  sm = {6} md = {6} xl = {6} lg ={6}> 
     <Stack spacing = {1.885}>
-    <Typography gutterBottom>Nodes between Seed Genes/Proteins</Typography>
+    <Typography gutterBottom>Edges between Seed Genes/Proteins</Typography>
     <Slider    
       value = {path}
       onChange={processPath} 
@@ -305,7 +305,7 @@ const processExample = async () => {
 
       step={1}
       marks
-      min={0}
+      min={1}
       max={2}
     />
     <Typography gutterBottom> Nodes in Subnetwork</Typography>
