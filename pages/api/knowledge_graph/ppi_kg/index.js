@@ -22,23 +22,43 @@ export const node_colour = ({label, id, input_list}) => {
 }
 
 
-export const computeZ = async ({inputs}) => {
+export const computeZ = async ({inputs, seeds}) => {
     let d = 30000
-    let c = 0
 
+
+    let degreeMap = new Map()
+    let seen = new Set()
     // compute number of edges on total subgraph
     for (const vals of inputs){
         if (vals['data']['kind'] === 'Relation'){
-            c += 1
+            const start_node = vals.data.source
+            const end_node = vals.data.target
+            if (!seen.has(vals.data.properties.id)){
+                if (degreeMap[start_node]) {
+                    degreeMap[start_node] += 1;
+                } else {
+                    degreeMap[start_node] = 1;
+                }
+
+                if (degreeMap[end_node]) {
+                    degreeMap[end_node] += 1;
+                } else {
+                    degreeMap[end_node] = 1;
+            }
+            seen.add(vals.data.properties.id)
+        }
+
         }
     }
 
+    let c = seen.size
 
    // check if it is not a seed    
     for (const dt of inputs){
         if (dt["data"]["kind"] === 'Protein'){
              // if not seed compute pval and add to object
             if (!dt.data.seed){
+                dt["data"]["degree"] = degreeMap[dt.data.id]
                 // a is degree
                 const a = dt.data.degree
                 // b is total_degree
@@ -65,7 +85,7 @@ export const computeZ = async ({inputs}) => {
 export const resolve_results = ({results, input_list}) => {
     try{
         
-        const degreeMap = new Map()
+        //const degreeMap = new Map()
 		const res = results.records.flatMap(record => {
 			const relations = record.get('r')
 			const nodes = record.get('n').reduce((acc, i)=>({
@@ -74,26 +94,26 @@ export const resolve_results = ({results, input_list}) => {
 			}), {})
 			const path = []
 			if (relations.length > 0) {
-                for (const relation of relations){
-                    const start_node = nodes[relation.start].properties.id
-                    const end_node = nodes[relation.end].properties.id
+                // for (const relation of relations){
+                //     const start_node = nodes[relation.start].properties.id
+                //     const end_node = nodes[relation.end].properties.id
                
-                    if (degreeMap[start_node]) {
-                        degreeMap[start_node] += 1;
-                    } else {
-                        degreeMap[start_node] = 1;
-                    }
+                //     if (degreeMap[start_node]) {
+                //         degreeMap[start_node] += 1;
+                //     } else {
+                //         degreeMap[start_node] = 1;
+                //     }
 
-                    if (degreeMap[end_node]) {
-                        degreeMap[end_node] += 1;
-                    } else {
-                        degreeMap[end_node] = 1;
-                    }
+                //     if (degreeMap[end_node]) {
+                //         degreeMap[end_node] += 1;
+                //     } else {
+                //         degreeMap[end_node] = 1;
+                //     }
                     
                     
 
 
-                }
+                // }
                 // add degrees in 
 				for (const relation of relations) {
 					const start_node = nodes[relation.start]
@@ -109,7 +129,8 @@ export const resolve_results = ({results, input_list}) => {
 							kind: start_kind,
 							label: start_node.properties.label || start_node.properties.id,
                             // add coloring scheme 
-                            degree: degreeMap[start_node.properties.id],
+                            degree: 0,
+                            //degreeMap[start_node.properties.id],
                             color: node_colour({label: start_node.properties.label, id: start_node.properties.id, input_list: input_list}),
                             seed: (input_list.includes(start_node.properties.label) || input_list.includes(start_node.properties.id)),
                             total_degree: start_node.properties.degree['low'],
@@ -118,7 +139,8 @@ export const resolve_results = ({results, input_list}) => {
                                 id: start_node.properties.id,
 							    kind: start_kind,
 							    label: start_node.properties.label || start_node.properties.id,
-                                degree: degreeMap[start_node.properties.id],
+                         
+                               // degreeMap[start_node.properties.id],
                             }
 						} 
 					})
@@ -155,7 +177,8 @@ export const resolve_results = ({results, input_list}) => {
 							id: end_node.properties.id,
 							kind: end_kind,
 							label: end_node.properties.label || end_node.properties.id,
-                            degree: degreeMap[end_node.properties.id],
+                            degree: 0,
+                            //degreeMap[end_node.properties.id],
 							color: node_colour({label: end_node.properties.label, id: end_node.properties.id, input_list: input_list}),
                             seed: (input_list.includes(end_node.properties.label) || input_list.includes(end_node.properties.id)),
                             total_degree: end_node.properties.degree['low'],
@@ -164,7 +187,8 @@ export const resolve_results = ({results, input_list}) => {
                                 id: end_node.properties.id,
 							    kind: start_kind,
 							    label: end_node.properties.label || end_node.properties.id,
-                                degree: degreeMap[end_node.properties.id],
+       
+                                //degreeMap[end_node.properties.id],
                             }
 						} 
 					})
@@ -173,7 +197,7 @@ export const resolve_results = ({results, input_list}) => {
 			return path
 		  })
           
-		return computeZ({inputs: res})
+		return computeZ({inputs: res, seeds: input_list})
         //return res
 	} catch(error){
        return error.message
