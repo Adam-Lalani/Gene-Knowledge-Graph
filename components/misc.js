@@ -197,7 +197,7 @@ export const TooltipCard = ({node, tooltip_templates, setFocused, router, schema
         colors[kind] = <Grid item xs={12} key={kind}>
           <Grid container alignItems={"center"} spacing={1}>
             <Grid item><Avatar style={{background: color, width: sizes[legendSize], height: sizes[legendSize], borderColor, borderStyle: borderColor ? "solid": "none", borderWidth: borders[legendSize]}}> </Avatar></Grid>
-            <Grid item><Typography variant="subtitle1">{kind}</Typography></Grid>   
+            <Grid item><Typography variant="subtitle1">{Gene}</Typography></Grid>   
           </Grid></Grid> 
       }
       if (colors[kind]!==undefined && color_sum[kind] === "#bdbdbd" && color !== "#ff8a80" && kind !== "Relation") {
