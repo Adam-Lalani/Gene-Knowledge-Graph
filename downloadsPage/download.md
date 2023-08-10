@@ -1,4 +1,4 @@
-## G2N Knowledge Graph Serializations
+## G4N Knowledge Graph Serializations
 
 | Resource | Number of Nodes | Node | Number of Edges| Edges | Date Updated |
 | :--------- | :--------- | :--------- | :--------- |:--------- |:--------- |
